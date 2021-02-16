@@ -2,7 +2,7 @@
 import React from "react";
 
 // Import other react components
-import HomePage from "./homepage.component";
+import HomePage from "./pages/homepage/homepage.component";
 
 // Create a react component
 const App = () => {
