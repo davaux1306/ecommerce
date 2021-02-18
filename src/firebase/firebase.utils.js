@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import { findRenderedDOMComponentWithClass } from "react-dom/test-utils";
 
 const config = {
   apiKey: "AIzaSyAufim2DPJokE_6jDIHZQ0sDM5zjUqioUQ",
@@ -9,6 +10,34 @@ const config = {
   storageBucket: "ecommerce-db-2cca6.appspot.com",
   messagingSenderId: "298796958454",
   appId: "1:298796958454:web:2b35a265db16671a4362d7",
+};
+
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) {
+    return;
+  }
+
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+
+  const snapshot = await userRef.get();
+
+  if (!snapshot.exists) {
+    const { displayName, email } = userAuth;
+    const createAt = new Date();
+
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createAt,
+        ...additionalData,
+      });
+    } catch (error) {
+      console.log("error creating user", error.message);
+    }
+  }
+
+  return userRef;
 };
 
 firebase.initializeApp(config);
